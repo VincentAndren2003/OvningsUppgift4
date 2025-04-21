@@ -6,9 +6,9 @@ public interface Graph {
 
   void connect(City from, City to, String name, double distance);
 
-  boolean isConnected(City a, City b);
+  boolean isConnected(Node a, Node b);
 
-  Collection<Edge> getPath(City from, City to);
+  Collection<Edge> getPath(Node from, Node to);
 
-  Collection<Edge> getShortestPath(City from, City to);
+  Collection<Edge> getShortestPath(Node from, Node to);
 }
