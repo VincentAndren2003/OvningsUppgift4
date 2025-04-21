@@ -5,9 +5,11 @@ public class ListGraph {
 
     public void remove (Node n) {
 
-        public void niggooolooo(){
+        public void niggooolooo() {
             int a = 0;
         }
+
+        String "hejsansistatestet!!!!";
     }
 
 }
