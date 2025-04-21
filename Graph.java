@@ -2,9 +2,9 @@ import java.util.*;
 
 public interface Graph {
 
-  void add(City city);
+  void add(Node node);
 
-  void connect(City from, City to, String name, double distance);
+  void connect(Node from, Node to, String name, double distance);
 
   boolean isConnected(City a, City b);
 

@@ -20,7 +20,7 @@ public class ListGraph implements Graph {
             int a = 0;
         }
 
-        String "hejsansistatestet!!!!";
+        String "hejsansistatestet!!!!" ;
     }
 
 }
