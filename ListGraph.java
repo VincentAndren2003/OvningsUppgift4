@@ -6,5 +6,10 @@ public class ListGraph {
     public void remove (Node n) {
 
     }
+    public void eatAss(Node n) {
+
+    }
+
+
 
 }
