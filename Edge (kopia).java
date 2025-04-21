@@ -3,9 +3,9 @@ import java.util.Objects;
 public class Edge {
   private final String name;
   private final double distance;
-  private final City destination;
+  private final Node destination;
 
-  public Edge(City destination, String name, double distance) {
+  public Edge(Node destination, String name, double distance) {
     this.destination = Objects.requireNonNull(destination);
     this.name = Objects.requireNonNull(name);
 
@@ -15,7 +15,7 @@ public class Edge {
     this.distance = distance;
   }
 
-  public City getDestination() {
+  public Node getDestination() {
     return destination;
   }
 
