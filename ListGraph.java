@@ -12,7 +12,7 @@ public class ListGraph implements Graph {
 
     public String hej(){
         return "då";
-    }
+        String a = "test terminal"}}
 
     public void remove (Node n) {
 
