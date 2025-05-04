@@ -14,13 +14,13 @@ public class ListGraph implements Graph {
         return "då";
         String a = "test terminal"}}
 
-public void remove (Node n) {
+    public void remove (Node n) {
 
-    public void niggooolooo() {
-        int a = 0;
+        public void niggooolooo() {
+            int a = 0;
+        }
+
+        String "hejsansistatestet!!!!" ;
     }
-
-    String "hejsansistatestet!!!!" ;
-}
 
 }
