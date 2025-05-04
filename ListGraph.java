@@ -69,7 +69,7 @@ public class ListGraph{
     }
 
     public boolean pathExists(Node from, Node to) {
-
+        return true;
     }
 
 }
