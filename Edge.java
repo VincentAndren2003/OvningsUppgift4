@@ -2,46 +2,35 @@ import java.util.Objects;
 
 public class Edge {
     private final String name;
-    private final double distance;
+    private int weight;
     private final Node destination;
 
-    public Edge(Node destination, String name, double distance) {
-        this.destination = Objects.requireNonNull(destination);
-        this.name = Objects.requireNonNull(name);
-
-        if (Double.isNaN(distance)) {
-            throw new IllegalArgumentException();
-        }
-        this.distance = distance;
+    public Edge(Node destination, String name, int weight) {
+        this.name = name;
+        this.weight = weight;
+        this.destination = destination;
     }
 
     public Node getDestination() {
         return destination;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        if (weight < 0){
+            throw new IllegalArgumentException("Weight must be a positive number");
+        }
+        this.weight = weight;
+    }
+
     public String getName() {
         return name;
     }
 
-    public double getDistance() {
-        return distance;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Edge edge) {
-            return destination.equals(edge.destination) && name.equals(edge.name);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(destination, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Edge[destination=" + destination + ", name=" + name + " distance=" + distance + "]";
+    public String toString(){
+        return name + " " + weight + " " + destination;
     }
 }
