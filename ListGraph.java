@@ -7,12 +7,8 @@ public class ListGraph implements Graph {
     private final Map<City, Set<Edge>> cities = new HashMap<>();
 
     public void add(Node n) {
-
+        // tar emot en nod och stoppar in den i grafen om den redan finns i grafen görs ingen förändring
     }
-
-    public String hej(){
-        return "då";
-        String a = "test terminal"}}
 
     public void remove (Node n) {
 
