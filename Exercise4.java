@@ -3,7 +3,7 @@ import java.util.SortedSet;
 import java.util.SortedMap;
 
 public class Exercise4 {
-	private Graph<Node> graph = new ListGraph<>();
+	private Graph<Node> graph = new ListGraph();
 
     public void loadLocationGraph(String fileName){
     }
