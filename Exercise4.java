@@ -10,7 +10,6 @@ public class Exercise4 {
 
 
     public void loadLocationGraph(String fileName){
-
         ListGraph graph = new ListGraph();
 
         try{
@@ -48,7 +47,6 @@ public class Exercise4 {
 
                 graph.connect(from, to, name, weight);
             }
-
             System.out.println(graph);
 
             fileReader.close();
@@ -62,7 +60,60 @@ public class Exercise4 {
     }
 
     public void loadRecommendationGraph(String fileName) {
+        ListGraph graph = new ListGraph();
 
+        try{
+            FileReader fileReader = new FileReader(fileName);
+            BufferedReader reader = new BufferedReader(fileReader);
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = line.split(";");
+
+                String personName = tokens[0];
+                String recordName = tokens[1];
+                String recordArtist = tokens[2];
+                if (tokens.length > 3){
+                    recordName = tokens[1] + ";" + tokens[2];
+                    recordArtist = tokens[3];
+                }
+
+                //Check if person and record exists
+                Node person = null;
+                for (Node node : graph.getNodes()) {
+                    if (node.getName().equals(personName)){
+                        person = node;
+                        break;
+                    }
+                }
+                if (person == null){
+                    person = new Person(personName);
+                    graph.add(person);
+                }
+                Node record = null;
+                for (Node node : graph.getNodes()) {
+                    if (node.getName().equals(recordName)){
+                        record = node;
+                        break;
+                    }
+                }
+                if (record == null){
+                    record = new Record(recordName, recordArtist);
+                    graph.add(record);
+                }
+                graph.connect(person, record, "", 0);
+            }
+
+            System.out.println(graph);
+
+            fileReader.close();
+            reader.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.printf("%s not found%n", fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public SortedMap<Integer, SortedSet<Record>> getAlsoLiked(Record record) {
        return null;
