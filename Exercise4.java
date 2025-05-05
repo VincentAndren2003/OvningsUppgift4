@@ -2,16 +2,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.SortedMap;
 
 public class Exercise4 {
-
+    private final ListGraph locationGraph = new ListGraph();
+    private final ListGraph recommendationGraph  = new ListGraph();
 
     public void loadLocationGraph(String fileName){
-        ListGraph graph = new ListGraph();
-
         try{
             FileReader fileReader = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(fileReader);
@@ -20,7 +20,7 @@ public class Exercise4 {
             String[] tokens =  nodesLine.split(";");
             for (int i = 0; i < tokens.length; i+=3){
 
-                graph.add(new Location(tokens[i], Double.parseDouble(tokens[i+1]), Double.parseDouble(tokens[i+2])));
+                locationGraph.add(new Location(tokens[i], Double.parseDouble(tokens[i+1]), Double.parseDouble(tokens[i+2])));
             }
 
             String line;
@@ -29,13 +29,13 @@ public class Exercise4 {
 
                 Node from = null;
                 Node to = null;
-                for (Node node : graph.getNodes()) {
+                for (Node node : locationGraph.getNodes()) {
                     if (node.getName().equals(edgeData[0])){
                         from = node;
                         break;
                     }
                 }
-                for (Node node : graph.getNodes()) {
+                for (Node node : locationGraph.getNodes()) {
                     if (node.getName().equals(edgeData[1])){
                         to = node;
                         break;
@@ -45,9 +45,9 @@ public class Exercise4 {
                 String name = edgeData[2];
                 int weight = Integer.parseInt(edgeData[3]);
 
-                graph.connect(from, to, name, weight);
+                locationGraph.connect(from, to, name, weight);
             }
-            System.out.println(graph);
+            System.out.println(locationGraph);
 
             fileReader.close();
             reader.close();
@@ -60,8 +60,6 @@ public class Exercise4 {
     }
 
     public void loadRecommendationGraph(String fileName) {
-        ListGraph graph = new ListGraph();
-
         try{
             FileReader fileReader = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(fileReader);
@@ -80,7 +78,7 @@ public class Exercise4 {
 
                 //Check if person and record exists
                 Node person = null;
-                for (Node node : graph.getNodes()) {
+                for (Node node : recommendationGraph.getNodes()) {
                     if (node.getName().equals(personName)){
                         person = node;
                         break;
@@ -88,10 +86,11 @@ public class Exercise4 {
                 }
                 if (person == null){
                     person = new Person(personName);
-                    graph.add(person);
+                    recommendationGraph.add(person);
                 }
+
                 Node record = null;
-                for (Node node : graph.getNodes()) {
+                for (Node node : recommendationGraph.getNodes()) {
                     if (node.getName().equals(recordName)){
                         record = node;
                         break;
@@ -99,12 +98,13 @@ public class Exercise4 {
                 }
                 if (record == null){
                     record = new Record(recordName, recordArtist);
-                    graph.add(record);
+                    recommendationGraph.add(record);
                 }
-                graph.connect(person, record, "", 0);
+
+                recommendationGraph.connect(person, record, "", 0);
             }
 
-            System.out.println(graph);
+            System.out.println(recommendationGraph);
 
             fileReader.close();
             reader.close();
@@ -116,7 +116,12 @@ public class Exercise4 {
         }
     }
     public SortedMap<Integer, SortedSet<Record>> getAlsoLiked(Record record) {
-       return null;
+        List<Edge> edges = recommendationGraph.getEdgesFrom(record);
+
+        return null;
+        //getAlsoLiked - en metod som tar emot en nod av typen Record och returnerar en avbildning (SortedMap) med andra skivor som personer som
+        //¨ager den skivan ocks˚a ¨ager. Avbildningen har popularitet som nyckel (sorterat fallande) och en sorterad m¨angd av Record som v¨arde. Metoden ¨ar
+        //t¨ankt att svara p˚a fr˚agan ”vad gillar andra som gillar den h¨ar skivan”.
     }
 
     public int getPopularity(Record record) {
