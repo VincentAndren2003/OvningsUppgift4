@@ -72,7 +72,46 @@ public class ListGraph{
     }
 
     public boolean pathExists(Node from, Node to) {
-        return true;
+        return depthFirstSearch(from, to, new HashSet<>(), new Stack<>()).empty();
+    }
+    public List<Edge> getPath(Node from, Node to) {
+        Set<Node> visited = new HashSet<>();
+        Stack<Node> path = new Stack<>();
+
+        path.push(from);
+
+        depthFirstSearch(from, to, visited, path);
+
+        if (path.size() < 2) {
+            return null;
+        }
+
+        List<Edge> edges = new ArrayList<>();
+        for (int i = 0; i < path.size() - 1; i++) {
+            edges.add(getEdgeBetween(path.get(i), path.get(i + 1)));
+        }
+        return edges;
     }
 
+    private Stack<Node> depthFirstSearch(Node current, Node searchedFor, Set<Node> visited, Stack<Node> pathSoFar) {
+        visited.add(current);
+        System.out.println("Visiting " + current.getName());
+        if (current.equals(searchedFor)) {
+            return pathSoFar;
+        }
+        for (Edge edge : nodes.get(current)) {
+            Node n = edge.getDestination();
+            if(!visited.contains(n)) {
+                pathSoFar.push(n);
+                Stack<Node> p = depthFirstSearch(n, searchedFor, visited, pathSoFar);
+                if (!p.isEmpty()) {
+                    return p;
+                } else {
+                    pathSoFar.pop();
+                }
+            }
+        }
+        System.out.println("Dead end in " + current.getName());
+        return new Stack<Node>();
+    }
 }
