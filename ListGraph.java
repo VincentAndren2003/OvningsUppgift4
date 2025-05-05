@@ -71,13 +71,28 @@ public class ListGraph{
         return null;
     }
 
+    public String toString(){
+        String ret = "";
+        for (Node node : nodes.keySet()) {
+            ret += node.toString() + "\n";
+            for (Edge edge : nodes.get(node)) {
+                ret += edge.toString() + "\n";
+            }
+            ret += "\n";
+        }
+        return ret;
+    }
+
     public boolean pathExists(Node from, Node to) {
-        return depthFirstSearch(from, to, new HashSet<>(), new Stack<>()).empty();
+        Set<Node> visited = new HashSet<>();
+        Stack<Node> path = new Stack<>();
+        path.push(from);
+
+        return !depthFirstSearch(from, to, visited, path).empty();
     }
     public List<Edge> getPath(Node from, Node to) {
         Set<Node> visited = new HashSet<>();
         Stack<Node> path = new Stack<>();
-
         path.push(from);
 
         depthFirstSearch(from, to, visited, path);
