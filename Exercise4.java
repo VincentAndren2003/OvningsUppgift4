@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class Exercise4 {
-    private final ListGraph locationGraph = new ListGraph();
-    private final ListGraph recommendationGraph  = new ListGraph();
+    private Graph<Node> graph = new ListGraph<>();
 
     public void loadLocationGraph(String fileName){
         try{
@@ -17,7 +16,7 @@ public class Exercise4 {
             String[] tokens =  nodesLine.split(";");
             for (int i = 0; i < tokens.length; i+=3){
 
-                locationGraph.add(new Location(tokens[i], Double.parseDouble(tokens[i+1]), Double.parseDouble(tokens[i+2])));
+                graph.add(new Location(tokens[i], Double.parseDouble(tokens[i+1]), Double.parseDouble(tokens[i+2])));
             }
 
             String line;
@@ -26,13 +25,15 @@ public class Exercise4 {
 
                 Node from = null;
                 Node to = null;
-                for (Node node : locationGraph.getNodes()) {
+                for (Object obj : graph.getNodes()) {
+                    Node node = (Node) obj;
                     if (node.getName().equals(edgeData[0])){
                         from = node;
                         break;
                     }
                 }
-                for (Node node : locationGraph.getNodes()) {
+                for (Object obj : graph.getNodes()) {
+                    Node node = (Node) obj;
                     if (node.getName().equals(edgeData[1])){
                         to = node;
                         break;
@@ -42,15 +43,15 @@ public class Exercise4 {
                 String name = edgeData[2];
                 int weight = Integer.parseInt(edgeData[3]);
 
-                locationGraph.connect(from, to, name, weight);
+                graph.connect(from, to, name, weight);
             }
-            System.out.println(locationGraph);
+            //System.out.println(graph);
 
             fileReader.close();
             reader.close();
 
         } catch (FileNotFoundException e) {
-            System.out.printf("%s not found%n", fileName);
+            //System.out.printf("%s not found%n", fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,56 +74,59 @@ public class Exercise4 {
                     recordArtist = tokens[3];
                 }
 
-                //Check if person and record exists
-                Node person = null;
-                for (Node node : recommendationGraph.getNodes()) {
-                    if (node.getName().equals(personName)){
-                        person = node;
-                        break;
-                    }
-                }
-                if (person == null){
-                    person = new Person(personName);
-                    recommendationGraph.add(person);
-                }
+                Node person = findOrCreatePerson(personName);
+                Node record = findOrCreateRecord(recordName, recordArtist);
 
-                Node record = null;
-                for (Node node : recommendationGraph.getNodes()) {
-                    if (node.getName().equals(recordName)){
-                        record = node;
-                        break;
-                    }
-                }
-                if (record == null){
-                    record = new Record(recordName, recordArtist);
-                    recommendationGraph.add(record);
-                }
-
-                recommendationGraph.connect(person, record, "", 0);
+                graph.connect(person, record, "", 0);
             }
 
-            System.out.println(recommendationGraph);
+            //System.out.println(graph);
 
             fileReader.close();
             reader.close();
 
         } catch (FileNotFoundException e) {
-            System.out.printf("%s not found%n", fileName);
+            //System.out.printf("%s not found%n", fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private Node findOrCreatePerson(String name) {
+        for (Object obj : graph.getNodes()) {
+            Node node = (Node) obj;
+            if (node.getName().equals(name)) return node;
+        }
+        Node person = new Person(name);
+        graph.add(person);
+        return person;
+    }
+    private Node findOrCreateRecord(String name, String artist) {
+        for (Object obj : graph.getNodes()) {
+            Node node = (Node) obj;
+            if (node.getName().equals(name)) return node;
+        }
+        Node record = new Record(name, artist);
+        graph.add(record);
+        return record;
+    }
+
     public SortedMap<Integer, SortedSet<Record>> getAlsoLiked(Record record) {
         //Get list of all people owning record
         List<Node> people = new ArrayList<>();
-        for (Edge edge : recommendationGraph.getEdgesFrom((Node) record)) {
-            people.add(edge.getDestination());
+        for (Object obj : graph.getEdgesFrom((Node) record)) {
+            Edge edge = (Edge) obj;
+            people.add((Node)edge.getDestination());
         }
 
         //Get all records from all people owing record
-        Set<Record> allRecords = new TreeSet<>();
+        Set<Record> allRecords = new TreeSet<>(Comparator.comparing(Node::getName));
+
         for (Node node : people) {
-            recommendationGraph.getEdgesFrom(node).forEach(edge -> allRecords.add((Record) edge.getDestination()));
+            graph.getEdgesFrom(node).forEach(obj -> {
+                Edge edge = (Edge) obj;
+                allRecords.add((Record) edge.getDestination());
+            });
         }
         SortedMap<Integer, SortedSet<Record>> sortedMap = new TreeMap<>(Comparator.reverseOrder());
         //Loop throiugh reciords, if popularity is unique, make new sorted set and add, if not find sorted set and add
@@ -132,7 +136,7 @@ public class Exercise4 {
                 sortedMap.get(getPopularity(r)).add(r);
             }
             else{
-                SortedSet<Record> recSet  = new TreeSet<>();
+                SortedSet<Record> recSet = new TreeSet<>(Comparator.comparing(Node::getName));
                 recSet.add(r);
                 sortedMap.put(getPopularity(r), recSet);
             }
@@ -141,13 +145,14 @@ public class Exercise4 {
     }
 
     public int getPopularity(Record record) {
-        return recommendationGraph.getEdgesFrom((Node) record).size();
+        return graph.getEdgesFrom((Node) record).size();
     }
 
     public SortedMap<Integer, Set<Record>> getTop5() {
         //Get list of all people owning record
-        Set<Record> allRecords = new TreeSet<>();
-        for (Node node: recommendationGraph.getNodes()){
+        Set<Record> allRecords = new TreeSet<>(Comparator.comparing(Node::getName));
+        for (Object obj: graph.getNodes()){
+            Node node = (Node) obj;
             if (node instanceof Record){
                 allRecords.add((Record) node);
             }
@@ -161,7 +166,7 @@ public class Exercise4 {
                 sortedMap.get(getPopularity(r)).add(r);
             }
             else{
-                SortedSet<Record> recSet  = new TreeSet<>();
+                SortedSet<Record> recSet = new TreeSet<>(Comparator.comparing(Node::getName));
                 recSet.add(r);
                 sortedMap.put(getPopularity(r), recSet);
             }
