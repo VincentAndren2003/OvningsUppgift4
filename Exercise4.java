@@ -2,10 +2,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.SortedMap;
+import java.lang.Record;
+import java.util.*;
 
 public class Exercise4 {
     private final ListGraph locationGraph = new ListGraph();
@@ -116,7 +114,24 @@ public class Exercise4 {
         }
     }
     public SortedMap<Integer, SortedSet<Record>> getAlsoLiked(Record record) {
-        List<Edge> edges = recommendationGraph.getEdgesFrom(record);
+        //Get list of all people owning record
+        List<Node> people = new ArrayList<>();
+        for (Edge edge : recommendationGraph.getEdgesFrom((Node) record)) {
+            people.add(edge.getDestination());
+        }
+
+        //Get all records from all people owing record
+        Set<Record> allRecords = new TreeSet<>();
+        for (Node node : people) {
+            recommendationGraph.getEdgesFrom(node).forEach(edge -> allRecords.add((Record) edge.getDestination()));
+        }
+        SortedMap sortedMap = new TreeMap();
+        //Loop throiugh reciords, if popularity is unique, make new sorted set and add, if not find sorted set and add
+        for (Record r : allRecords) {
+            if (sortedMap.containsKey(getPopularity(r))){
+                //Popularity is not unique
+            }
+        }
 
         return null;
         //getAlsoLiked - en metod som tar emot en nod av typen Record och returnerar en avbildning (SortedMap) med andra skivor som personer som
@@ -125,7 +140,7 @@ public class Exercise4 {
     }
 
     public int getPopularity(Record record) {
-       return -1;
+        return recommendationGraph.getEdgesFrom((Node) record).size();
     }
 
     public SortedMap<Integer, Set<Record>> getTop5() {
