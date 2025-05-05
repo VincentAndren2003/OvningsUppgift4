@@ -125,18 +125,20 @@ public class Exercise4 {
         for (Node node : people) {
             recommendationGraph.getEdgesFrom(node).forEach(edge -> allRecords.add((Record) edge.getDestination()));
         }
-        SortedMap sortedMap = new TreeMap();
+        SortedMap<Integer, SortedSet<Record>> sortedMap = new TreeMap<>(Comparator.reverseOrder());
         //Loop throiugh reciords, if popularity is unique, make new sorted set and add, if not find sorted set and add
         for (Record r : allRecords) {
             if (sortedMap.containsKey(getPopularity(r))){
                 //Popularity is not unique
+                sortedMap.get(getPopularity(r)).add(r);
+            }
+            else{
+                SortedSet<Record> recSet  = new TreeSet<>();
+                recSet.add(r);
+                sortedMap.put(getPopularity(r), recSet);
             }
         }
-
-        return null;
-        //getAlsoLiked - en metod som tar emot en nod av typen Record och returnerar en avbildning (SortedMap) med andra skivor som personer som
-        //¨ager den skivan ocks˚a ¨ager. Avbildningen har popularitet som nyckel (sorterat fallande) och en sorterad m¨angd av Record som v¨arde. Metoden ¨ar
-        //t¨ankt att svara p˚a fr˚agan ”vad gillar andra som gillar den h¨ar skivan”.
+        return sortedMap;
     }
 
     public int getPopularity(Record record) {
