@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.Record;
 import java.util.*;
 
 public class Exercise4 {
@@ -172,7 +171,7 @@ public class Exercise4 {
 
         SortedMap<Integer, Set<Record>> top5 = new TreeMap<>(Comparator.reverseOrder());
         for (int i = 0; i < sortedMap.size(); i++){
-            if (i > 5){
+            if (i > 4){
                 break;
             }
             top5.put(popularity[i], sortedMap.get(popularity[i]));

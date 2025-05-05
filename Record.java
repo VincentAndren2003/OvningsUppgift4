@@ -16,6 +16,7 @@ public class Record implements Node{
         return artist;
     }
 
+    @Override
     public String toString(){
         return name + " " + artist;
     }
