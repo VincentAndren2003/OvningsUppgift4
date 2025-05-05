@@ -146,9 +146,37 @@ public class Exercise4 {
     }
 
     public SortedMap<Integer, Set<Record>> getTop5() {
-       return null;
+        //Get list of all people owning record
+        Set<Record> allRecords = new TreeSet<>();
+        for (Node node: recommendationGraph.getNodes()){
+            if (node instanceof Record){
+                allRecords.add((Record) node);
+            }
+        }
+
+        SortedMap<Integer, Set<Record>> sortedMap = new TreeMap<>(Comparator.reverseOrder());
+        //Loop throiugh reciords, if popularity is unique, make new sorted set and add, if not find sorted set and add
+        for (Record r : allRecords) {
+            if (sortedMap.containsKey(getPopularity(r))){
+                //Popularity is not unique
+                sortedMap.get(getPopularity(r)).add(r);
+            }
+            else{
+                SortedSet<Record> recSet  = new TreeSet<>();
+                recSet.add(r);
+                sortedMap.put(getPopularity(r), recSet);
+            }
+        }
+
+        Integer[] popularity = sortedMap.keySet().toArray(new Integer[sortedMap.size()]);
+
+        SortedMap<Integer, Set<Record>> top5 = new TreeMap<>(Comparator.reverseOrder());
+        for (int i = 0; i < sortedMap.size(); i++){
+            if (i > 5){
+                break;
+            }
+            top5.put(popularity[i], sortedMap.get(popularity[i]));
+        }
+        return top5;
     }
-
-
-
 }
