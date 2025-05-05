@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Record implements Node{
     private final String name;
     private final String artist;
@@ -16,5 +14,9 @@ public class Record implements Node{
 
     public String getArtist(){
         return artist;
+    }
+
+    public String toString(){
+        return name + " " + artist;
     }
 }
