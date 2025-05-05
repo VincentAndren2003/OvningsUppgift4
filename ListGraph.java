@@ -43,17 +43,20 @@ public class ListGraph{
         edge.setWeight(weight);
     }
 
-    public void getNodes(){
-        //Make copy of list
+    public Set<Node> getNodes(){
+        Set<Node> copyNodes = new HashSet<>();
+        copyNodes.addAll(nodes.keySet());
+
+        return copyNodes;
     }
 
     public List<Edge> getEdgesFrom(Node from){
         if (!nodes.containsKey(from)) {
             throw new NoSuchElementException("Node " + from + " not found");
         }
-        return nodes.get(from);
-
-        //Make copy of list asd
+        List<Edge> copyEdges = new ArrayList<>();
+        copyEdges.addAll(nodes.get(from));
+        return copyEdges;
     }
 
     public Edge getEdgeBetween(Node from, Node to) {
